@@ -2,35 +2,45 @@ import audioop
 import wave
 import struct
 import array
+import binascii
 import pydub
 from pydub import AudioSegment
 
 def main():
-    #AudioSegment.ffmpeg = "c:\\ffmpeg\\bin\\ffmpeg.exe" not needed, doesn't work anyway
-   # pg = AudioSegment.from_wav("ey_b0ss.wav")
-    #pg_reverse = pg.reverse()
-   # pg_reverse.export("reverse_b0ss.wav", format="wav")
+    wave_read_pg =  wave.open("ey_b0ss.wav",'r')#read the file we want
+    frame_count = wave_read_pg.getnframes()#get the number of frames
+    print(frame_count)#debugging purposes
 
-    wave_read_pg =  wave.open("ey_b0ss.wav",'r')
-    frame_count = wave_read_pg.getnframes()
-    print(frame_count)
+    frameRate = wave_read_pg.getframerate()#get the framerate, ie audio quality, cd, mp3, etc..
 
-    frameRate = wave_read_pg.getframerate()
+    print(frameRate)#debugging
 
-    print(frameRate)
+    framesList = wave_read_pg.readframes(frame_count)#get all the values of each sample in each frame
+    wr = wave.open("test.wav",'wb')#open a new file, this file will be created with this name
+    wr.setframerate(frameRate)#set the framerate
 
-    framesList = wave_read_pg.readframes(frame_count)
-
-
-    print(framesList)
-
-    sampleWidth = wave_read_pg.getsampwidth()
-    print(sampleWidth)
-
-    #sample_array = struct.unpack("<H",framesList[0:1)
-    #print(sample_array)
-    #for k in range(0,frame_count):
-    #    framesList[k]+= 10
     #print(framesList)
+
+    sampleWidth = wave_read_pg.getsampwidth()#set the sample width, (how many bits the sound is represented in0
+    print(sampleWidth)
+    samples = array.array('B',framesList)#turn the list of frame values into a byte array, converting hex into a number we can do math on
+    #print(samples)
+
+
+   # print(samples)
+    #samplesString = '\\x'.join('{:02x}'.format(x) for x in samples)
+    #print(''.join('{:02x}'.format(x) for x in samples))
+    #print(samplesString)
+    wr.setnchannels(1)#set the number of chanels, 1 for mono, 2 for stereo
+    wr.setnframes(frame_count)#set the number of frames for this file
+    wr.setsampwidth(2)#set the sample width, (bit representation of sound)
+    wr.writeframes(samples)#write the byte array to this new file,
+    wr.close()#close the file and it should be a playable .wav file
+
+    print("From byte array to hex string is what is above")
+
+
+
+
 
 main()
