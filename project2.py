@@ -5,18 +5,31 @@ import array
 
 
 def main():
-    originalFile =  wave.open("sez.wav",'r')#read the file we want
+
+    print("Welome to Pitch a Tempo\n")
+
+    filename = input("Enter the name, make sure it is a wav file: ")
+    originalFile =  wave.open(filename,'r')#read the file we want
+
+    printMenu()#printMenu
+    choice = input("make your choice: ")
     frame_count =originalFile.getnframes()#get the number of frames
-    print("Number of Frames: %d" % frame_count)#debugging purposes
-
     frameRate =originalFile.getframerate()#get the framerate, ie audio quality, cd, mp3, etc..
-
-    print("frame rate: %d" % frameRate)#debugging
-
     framesList =originalFile.readframes(frame_count)#get all the values of each sample in each frame
 
-    wr = wave.open("test4.wav",'wb')#open a new file, this file will be created with this name
-    wr.setframerate(frameRate*2)#set the framerate this framerate causes file to be deeper, slower sounding. multiplying rate by 2 fixes this.
+    frameRate*=2
+    print("Number of Frames: %d" % frame_count)#debugging purposes
+    print("frame rate: %d" % frameRate)#debugging
+
+
+    if(choice == "1"):#make deeper
+        frameRate = makeLow(frameRate)
+    elif(choice == "2"):
+       frameRate = makeHigh(frameRate)
+    print("Modified framerate: %d" % frameRate)
+    outputFileName = input("Enter an output file name: ")
+    wr = wave.open(outputFileName,'wb')#open a new file, this file will be created with this name
+    wr.setframerate(frameRate)#set the framerate this framerate causes file to be deeper, slower sounding. multiplying rate by 2 fixes this.
     #some informati0n may be lost in the process of converting the hex, or the frameRate is somehow wrong
 
     #print(framesList)
@@ -27,7 +40,7 @@ def main():
     #print(samples)
 
 
-   # print(samples)
+    # print(samples)
     #samplesString = '\\x'.join('{:02x}'.format(x) for x in samples)
     #print(''.join('{:02x}'.format(x) for x in samples))
     #print(samplesString)
@@ -39,8 +52,17 @@ def main():
 
     #print("From byte array to hex string is what is above")
 
+def printMenu():
+    print("What do you want to do with this file?")
+    print("1\tMake the audio deeper (this will make duration of the file longer")
+    print("2\tMake the audio higher (this will make the duration of the file shorter")
 
+def makeLow(framerate):
+    framerate-= framerate//2
+    return framerate
 
-
+def makeHigh(framerate):
+    framerate+= framerate//2
+    return framerate
 
 main()
