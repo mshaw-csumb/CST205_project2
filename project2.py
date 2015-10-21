@@ -1,21 +1,19 @@
 import audioop
 import wave
-import struct
 import array
-import binascii
-import pydub
-from pydub import AudioSegment
+
+
 
 def main():
-    wave_read_pg =  wave.open("sez.wav",'r')#read the file we want
-    frame_count = wave_read_pg.getnframes()#get the number of frames
+    originalFile =  wave.open("sez.wav",'r')#read the file we want
+    frame_count =originalFile.getnframes()#get the number of frames
     print("Number of Frames: %d" % frame_count)#debugging purposes
 
-    frameRate = wave_read_pg.getframerate()#get the framerate, ie audio quality, cd, mp3, etc..
+    frameRate =originalFile.getframerate()#get the framerate, ie audio quality, cd, mp3, etc..
 
     print("frame rate: %d" % frameRate)#debugging
 
-    framesList = wave_read_pg.readframes(frame_count)#get all the values of each sample in each frame
+    framesList =originalFile.readframes(frame_count)#get all the values of each sample in each frame
 
     wr = wave.open("test4.wav",'wb')#open a new file, this file will be created with this name
     wr.setframerate(frameRate*2)#set the framerate this framerate causes file to be deeper, slower sounding. multiplying rate by 2 fixes this.
@@ -23,7 +21,7 @@ def main():
 
     #print(framesList)
 
-    sampleWidth = wave_read_pg.getsampwidth()#set the sample width, (how many bits the sound is represented in0
+    sampleWidth =originalFile.getsampwidth()#set the sample width, (how many bits the sound is represented in0
     print("Sample width: %d bits"  % sampleWidth )
     samples = array.array('B',framesList)#turn the list of frame values into a byte array, converting hex into a number we can do math on
     #print(samples)
