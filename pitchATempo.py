@@ -62,9 +62,10 @@ def main():
     button2.pack()
     before.pack()
     after.pack()
+    button4.pack()
     root.mainloop()
     #button3.pack()
-    button4.pack()
+
 
     #originalFile =  wave.open(filename,'r')#read the file we want
 
@@ -135,6 +136,11 @@ def writeFile():
     global frameRate
     global outputFileName
     outputFileName = fileEntry.get()
+    if len(fileEntry.get()) == 0:
+        outputFileName = "altered_" + filename
+        tkinter.messagebox.showinfo("File Name", "Your file has been created as " + outputFileName)
+    elif not(len(fileEntry.get()) == 0):
+        tkinter.messagebox.showinfo("File Name", "Your file name has been created as " + outputFileName)
     wr = wave.open(outputFileName,'wb')#open a new file, this file will be created with this name
     wr.setframerate(frameRate)
     wr.setnchannels(1)#set the number of channels, 1 for mono, 2 for stereo
@@ -142,5 +148,6 @@ def writeFile():
     wr.setsampwidth(2)#set the sample width, (bit representation of sound)
     wr.writeframes(framesList)#write the byte array to this new file,
     wr.close()#close the file and it should be a playable .wav file
+
 
 main()
